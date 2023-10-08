@@ -1,15 +1,6 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <conio.h>
-#include <time.h>
-
-void printArr(int arr[], int length)
-{
-    for (int i = 0; i < length; i++)
-    {
-        printf("%d\t", arr[i]);
-    }
-    printf("\n");
-}
 
 void swap(int *num_one, int *num_two)
 {
@@ -18,39 +9,37 @@ void swap(int *num_one, int *num_two)
     *num_two = tmp;
 }
 
-void bubbleSort(int arr[], int length)
+void fillMatrix(int matrix[100][100], int rows, int cols)
 {
-    while (length)
-    {
-        int max_index = 0;
-        for (int i = 1; i < length; i++)
-        {
-            if (arr[i - 1] > arr[i])
-            {
-                swap(&arr[i - 1], &arr[i]);
-                max_index = i;
-            }
-        }
-        length = max_index;
-    }
+    for (int i = 0; i < rows; i++)
+        for (int j = 0; j < cols; j++)
+            matrix[i][j] = rand() % 100;
 }
 
-void selectionSort(int arr[], int length)
+void printMatrix(int matrix[100][100], int rows, int cols)
 {
-    for (int i = 0; i < length - 1; i++)
+    for (int i = 0; i < rows; i++)
     {
-        int min_index = i;
-        for (int j = i + 1; j < length; j++)
+        for (int j = 0; j < cols; j++)
         {
-            if (arr[min_index] > arr[j])
-                min_index = j;
+            printf("%d ", matrix[i][j]);
         }
-        if (min_index != i)
-            swap(&arr[min_index], &arr[i]);
+        printf("\n");
     }
+    printf("\n");
 }
 
-void insertionSort(int arr[], int length)
+int matrixToArray(int matrix[100][100], int arr[], int rows, int cols)
+{
+    int length = 0;
+    for (int i = 0; i < rows; i++)
+        for (int j = 0; j < cols; j++)
+            arr[length++] = matrix[i][j];
+
+    return length;
+}
+
+int insertionSort(int arr[], int length)
 {
     for (int i = 1; i < length; i++)
     {
@@ -63,76 +52,95 @@ void insertionSort(int arr[], int length)
     }
 }
 
-int partition(int arr[], int start, int end)
+void fillSpiralFromLeft(int matrix[100][100], int arr[], int top, int bottom, int left, int right, int index)
 {
-    int pivot = arr[end];
-    int part_index = start;
-    for (int i = start; i < end; i++)
+    if (top > bottom || left > right)
     {
-        if (arr[i] <= pivot)
-        {
-            swap(&arr[i], &arr[part_index]);
-            part_index++;
-        }
+        return;
     }
-    swap(&arr[end], &arr[part_index]);
 
-    return part_index;
+    for (int i = left; i <= right; i++)
+    {
+        matrix[top][i] = arr[index++];
+    }
+    top++;
+
+    for (int i = top; i <= bottom; i++)
+    {
+        matrix[i][right] = arr[index++];
+    }
+    right--;
+
+    if (top <= bottom)
+    {
+        for (int i = right; i >= left; i--)
+        {
+            matrix[bottom][i] = arr[index++];
+        }
+        bottom--;
+    }
+
+    if (left <= right)
+    {
+        for (int i = bottom; i >= top; i--)
+        {
+            matrix[i][left] = arr[index++];
+        }
+        left++;
+    }
+
+    fillSpiralFromLeft(matrix, arr, top, bottom, left, right, index);
 }
 
-void quickSort(int arr[], int start, int end)
+void fillSpiralFromRight(int matrix[100][100], int arr[], int top, int bottom, int left, int right, int index)
 {
-    if (start < end)
+    if (top > bottom || left > right)
+        return;
+
+    for (int i = right; i >= left; i--)
     {
-        int piv_index = partition(arr, start, end);
-        quickSort(arr, start, piv_index - 1);
-        quickSort(arr, piv_index + 1, end);
+        matrix[top][i] = arr[index++];
     }
+    top++;
+
+    for (int i = top; i <= bottom; i++)
+    {
+        matrix[i][left] = arr[index++];
+    }
+    left++;
+
+    for (int i = left; i <= right; i++)
+    {
+        matrix[bottom][i] = arr[index++];
+    }
+    bottom--;
+
+    for (int i = bottom; i >= top; i--)
+    {
+        matrix[i][right] = arr[index++];
+    }
+    right--;
+
+    fillSpiralFromRight(matrix, arr, top, bottom, left, right, index);
 }
 
 int main()
 {
-    int a[1000], b[1000], c[1000], d[1000];
-    int n;
-    clock_t start_time, end_time;
-    double time_used;
+    int matrix[100][100], rows, cols;
+    scanf("%d%d", &rows, &cols);
+    fillMatrix(matrix, rows, cols);
 
-    scanf("%d", &n);
-    for (int i = 0; i < n; i++)
-    {
-        scanf("%d", &a[i]);
-        b[i] = a[i];
-        c[i] = a[i];
-        d[i] = a[i];
-    }
+    int arr[10000] = {0};
+    int length = matrixToArray(matrix, arr, rows, cols);
+    insertionSort(arr, length);
 
-    start_time = clock();
-    bubbleSort(a, n);
-    end_time = clock();
-    time_used = ((double)(end_time - start_time)) / CLOCKS_PER_SEC;
-    printArr(a, n);
-    printf("Timp luat: %f secunde\n\n", time_used);
+    int top = 0, bottom = rows - 1, left = 0, right = cols - 1;
+    fillSpiralFromLeft(matrix, arr, top, bottom, left, right, 0);
+    printMatrix(matrix, rows, cols);
 
-    start_time = clock();
-    selectionSort(b, n);
-    end_time = clock();
-    time_used = ((double)(end_time - start_time)) / CLOCKS_PER_SEC;
-    printArr(b, n);
-    printf("Timp luat: %f secunde\n\n", time_used);
-
-    start_time = clock();
-    insertionSort(c, n);
-    end_time = clock();
-    time_used = ((double)(end_time - start_time)) / CLOCKS_PER_SEC;
-    printArr(c, n);
-    printf("Timp luat: %f secunde\n\n", time_used);
-
-    start_time = clock();
-    quickSort(d, 0, n - 1);
-    end_time = clock();
-    time_used = ((double)(end_time - start_time)) / CLOCKS_PER_SEC;
-    printArr(d, n);
-    printf("Timp luat: %f secunde\n\n", time_used);
+    top = 0, bottom = rows - 1, left = 0, right = cols - 1;
+    fillSpiralFromRight(matrix, arr, top, bottom, left, right, 0);
+    printMatrix(matrix, rows, cols);
 
     getch();
     return 0;

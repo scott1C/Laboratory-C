@@ -109,11 +109,14 @@ void fillSpiralFromRight(int matrix[100][100], int arr[], int top, int bottom, i
     }
     left++;
 
-    for (int i = left; i <= right; i++)
+    if (left < right)
     {
-        matrix[bottom][i] = arr[index++];
+        for (int i = left; i <= right; i++)
+        {
+            matrix[bottom][i] = arr[index++];
+        }
+        bottom--;
     }
-    bottom--;
 
     for (int i = bottom; i >= top; i--)
     {
@@ -122,6 +125,46 @@ void fillSpiralFromRight(int matrix[100][100], int arr[], int top, int bottom, i
     right--;
 
     fillSpiralFromRight(matrix, arr, top, bottom, left, right, index);
+}
+
+void fillSpiralFromMiddle(int matrix[100][100], int arr[], int top, int bottom, int left, int right, int index, int middle)
+{
+    if (top > bottom || left > right)
+        return;
+
+    for (int i = middle; i <= right; i++)
+    {
+        matrix[top][i] = arr[index++];
+    }
+    top++;
+
+    for (int i = top; i <= bottom; i++)
+    {
+        matrix[i][right] = arr[index++];
+    }
+    right--;
+
+    for (int i = right; i >= left; i--)
+    {
+        matrix[bottom][i] = arr[index++];
+    }
+    bottom--;
+
+    for (int i = bottom; i >= top; i--)
+    {
+        matrix[i][left] = arr[index++];
+    }
+    left++;
+
+    if (top <= bottom)
+    {
+        for (int i = top - 1; i < middle; i++)
+        {
+            matrix[left - 1][i] = arr[index++];
+        }
+    }
+
+    fillSpiralFromMiddle(matrix, arr, top, bottom, left, right, index, middle);
 }
 
 int main()
@@ -140,6 +183,11 @@ int main()
 
     top = 0, bottom = rows - 1, left = 0, right = cols - 1;
     fillSpiralFromRight(matrix, arr, top, bottom, left, right, 0);
+    printMatrix(matrix, rows, cols);
+
+    top = 0, bottom = rows - 1, left = 0, right = cols - 1;
+    int middle = cols / 2;
+    fillSpiralFromMiddle(matrix, arr, top, bottom, left, right, 0, middle);
     printMatrix(matrix, rows, cols);
 
     getch();

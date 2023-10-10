@@ -167,11 +167,50 @@ void fillSpiralFromMiddle(int matrix[100][100], int arr[], int top, int bottom, 
     fillSpiralFromMiddle(matrix, arr, top, bottom, left, right, index, middle);
 }
 
+void fillSpiralFromMiddleRight(int matrix[100][100], int arr[], int top, int bottom, int left, int right, int index, int middle)
+{
+    if (top > bottom || left > right)
+        return;
+
+    for (int i = middle; i <= bottom; i++)
+    {
+        matrix[i][right] = arr[index++];
+    }
+    right--;
+
+    for (int i = right; i >= left; i--)
+    {
+        // printf("%d %d\n", bottom, i);
+        matrix[bottom][i] = arr[index++];
+    }
+    bottom--;
+
+    for (int i = bottom; i >= top; i--)
+    {
+        matrix[i][left] = arr[index++];
+    }
+    left++;
+
+    for (int i = left; i <= right; i++)
+    {
+        matrix[top][i] = arr[index++];
+    }
+    top++;
+
+    for (int i = left - 1; i < middle; i++)
+    {
+        matrix[i][right + 1] = arr[index++];
+    }
+
+    fillSpiralFromMiddleRight(matrix, arr, top, bottom, left, right, index, middle);
+}
+
 int main()
 {
     int matrix[100][100], rows, cols;
     scanf("%d%d", &rows, &cols);
     fillMatrix(matrix, rows, cols);
+    printMatrix(matrix, rows, cols);
 
     int arr[10000] = {0};
     int length = matrixToArray(matrix, arr, rows, cols);
@@ -188,6 +227,10 @@ int main()
     top = 0, bottom = rows - 1, left = 0, right = cols - 1;
     int middle = cols / 2;
     fillSpiralFromMiddle(matrix, arr, top, bottom, left, right, 0, middle);
+    printMatrix(matrix, rows, cols);
+
+    top = 0, bottom = rows - 1, left = 0, right = cols - 1, rows / 2;
+    fillSpiralFromMiddleRight(matrix, arr, top, bottom, left, right, 0, middle);
     printMatrix(matrix, rows, cols);
 
     getch();

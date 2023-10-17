@@ -1,237 +1,70 @@
 #include <stdio.h>
-#include <stdlib.h>
+#include <string.h>
 #include <conio.h>
 
-void swap(int *num_one, int *num_two)
+void isRotation(char firstString[], char secondString[])
 {
-    int tmp = *num_one;
-    *num_one = *num_two;
-    *num_two = tmp;
-}
+    int firstNumber = 0, secondNumber = 0;
+    for (int i = 0; i < strlen(firstString); i++)
+        firstNumber += firstString[i];
+    for (int i = 0; i < strlen(secondString); i++)
+        secondNumber += secondString[i];
 
-void fillMatrix(int matrix[100][100], int rows, int cols)
-{
-    for (int i = 0; i < rows; i++)
-        for (int j = 0; j < cols; j++)
-            matrix[i][j] = rand() % 100;
-}
-
-void printMatrix(int matrix[100][100], int rows, int cols)
-{
-    for (int i = 0; i < rows; i++)
+    if (firstNumber == secondNumber)
     {
-        for (int j = 0; j < cols; j++)
-        {
-            printf("%d ", matrix[i][j]);
-        }
-        printf("\n");
+        printf("It is possible\n");
     }
-    printf("\n");
-}
-
-int matrixToArray(int matrix[100][100], int arr[], int rows, int cols)
-{
-    int length = 0;
-    for (int i = 0; i < rows; i++)
-        for (int j = 0; j < cols; j++)
-            arr[length++] = matrix[i][j];
-
-    return length;
-}
-
-int insertionSort(int arr[], int length)
-{
-    for (int i = 1; i < length; i++)
+    else
     {
-        int sorted = i - 1;
-        while (sorted >= 0 && arr[sorted] > arr[sorted + 1])
-        {
-            swap(&arr[sorted], &arr[sorted + 1]);
-            sorted--;
-        }
+        printf("It is not possible\n");
     }
 }
 
-void fillSpiralFromLeft(int matrix[100][100], int arr[], int top, int bottom, int left, int right, int index)
+int isPalindrome(char string[])
 {
-    if (top > bottom || left > right)
-    {
-        return;
-    }
-
-    for (int i = left; i <= right; i++)
-    {
-        matrix[top][i] = arr[index++];
-    }
-    top++;
-
-    for (int i = top; i <= bottom; i++)
-    {
-        matrix[i][right] = arr[index++];
-    }
-    right--;
-
-    if (top <= bottom)
-    {
-        for (int i = right; i >= left; i--)
-        {
-            matrix[bottom][i] = arr[index++];
-        }
-        bottom--;
-    }
-
-    if (left <= right)
-    {
-        for (int i = bottom; i >= top; i--)
-        {
-            matrix[i][left] = arr[index++];
-        }
-        left++;
-    }
-
-    fillSpiralFromLeft(matrix, arr, top, bottom, left, right, index);
-}
-
-void fillSpiralFromRight(int matrix[100][100], int arr[], int top, int bottom, int left, int right, int index)
-{
-    if (top > bottom || left > right)
-        return;
-
-    for (int i = right; i >= left; i--)
-    {
-        matrix[top][i] = arr[index++];
-    }
-    top++;
-
-    for (int i = top; i <= bottom; i++)
-    {
-        matrix[i][left] = arr[index++];
-    }
-    left++;
-
-    if (left < right)
-    {
-        for (int i = left; i <= right; i++)
-        {
-            matrix[bottom][i] = arr[index++];
-        }
-        bottom--;
-    }
-
-    for (int i = bottom; i >= top; i--)
-    {
-        matrix[i][right] = arr[index++];
-    }
-    right--;
-
-    fillSpiralFromRight(matrix, arr, top, bottom, left, right, index);
-}
-
-void fillSpiralFromMiddle(int matrix[100][100], int arr[], int top, int bottom, int left, int right, int index, int middle)
-{
-    if (top > bottom || left > right)
-        return;
-
-    for (int i = middle; i <= right; i++)
-    {
-        matrix[top][i] = arr[index++];
-    }
-    top++;
-
-    for (int i = top; i <= bottom; i++)
-    {
-        matrix[i][right] = arr[index++];
-    }
-    right--;
-
-    for (int i = right; i >= left; i--)
-    {
-        matrix[bottom][i] = arr[index++];
-    }
-    bottom--;
-
-    for (int i = bottom; i >= top; i--)
-    {
-        matrix[i][left] = arr[index++];
-    }
-    left++;
-
-    if (top <= bottom)
-    {
-        for (int i = top - 1; i < middle; i++)
-        {
-            matrix[left - 1][i] = arr[index++];
-        }
-    }
-
-    fillSpiralFromMiddle(matrix, arr, top, bottom, left, right, index, middle);
-}
-
-void fillSpiralFromMiddleRight(int matrix[100][100], int arr[], int top, int bottom, int left, int right, int index, int middle)
-{
-    if (top > bottom || left > right)
-        return;
-
-    for (int i = middle; i <= bottom; i++)
-    {
-        matrix[i][right] = arr[index++];
-    }
-    right--;
-
-    for (int i = right; i >= left; i--)
-    {
-        // printf("%d %d\n", bottom, i);
-        matrix[bottom][i] = arr[index++];
-    }
-    bottom--;
-
-    for (int i = bottom; i >= top; i--)
-    {
-        matrix[i][left] = arr[index++];
-    }
-    left++;
-
-    for (int i = left; i <= right; i++)
-    {
-        matrix[top][i] = arr[index++];
-    }
-    top++;
-
-    for (int i = left - 1; i < middle; i++)
-    {
-        matrix[i][right + 1] = arr[index++];
-    }
-
-    fillSpiralFromMiddleRight(matrix, arr, top, bottom, left, right, index, middle);
+    for (int i = 0; i < strlen(string) / 2; i++)
+        if (string[i] != string[strlen(string) - i - 1])
+            return 0;
+    return 1;
 }
 
 int main()
 {
-    int matrix[100][100], rows, cols;
-    scanf("%d%d", &rows, &cols);
-    fillMatrix(matrix, rows, cols);
-    printMatrix(matrix, rows, cols);
+    char text[100], symbol;
+    printf("Enter your text: ");
+    fgets(text, 100, stdin);
+    text[strlen(text) - 1] = '\0';
 
-    int arr[10000] = {0};
-    int length = matrixToArray(matrix, arr, rows, cols);
-    insertionSort(arr, length);
+    printf("Enter the symbol which you want to find: ");
+    scanf("%c", &symbol);
+    int count = 0;
+    for (int i = 0; i < strlen(text); i++)
+        if (text[i] == symbol)
+            count++;
+    printf("%d\n", count);
 
-    int top = 0, bottom = rows - 1, left = 0, right = cols - 1;
-    fillSpiralFromLeft(matrix, arr, top, bottom, left, right, 0);
-    printMatrix(matrix, rows, cols);
+    char one[100], two[200];
+    printf("Enter the first string: ");
+    scanf("%s", one);
 
-    top = 0, bottom = rows - 1, left = 0, right = cols - 1;
-    fillSpiralFromRight(matrix, arr, top, bottom, left, right, 0);
-    printMatrix(matrix, rows, cols);
+    printf("Enter the second string: ");
+    scanf("%s", two);
+    isRotation(one, two);
 
-    top = 0, bottom = rows - 1, left = 0, right = cols - 1;
-    int middle = cols / 2;
-    fillSpiralFromMiddle(matrix, arr, top, bottom, left, right, 0, middle);
-    printMatrix(matrix, rows, cols);
+    char palindromicText[100];
+    printf("Enter the string which you want to check if it is palindromic: ");
+    scanf("%s", text);
 
-    top = 0, bottom = rows - 1, left = 0, right = cols - 1, rows / 2;
-    fillSpiralFromMiddleRight(matrix, arr, top, bottom, left, right, 0, middle);
-    printMatrix(matrix, rows, cols);
+    int palindrome = isPalindrome(palindromicText);
+
+    if (palindrome)
+    {
+        printf("It is palindrome\n");
+    }
+    else
+    {
+        printf("It is not palindrome\n");
+    }
 
     getch();
     return 0;

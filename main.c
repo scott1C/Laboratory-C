@@ -1,224 +1,221 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <conio.h>
 #include <string.h>
 
-#define MAX_LENGTH_OF_CHAR 100
-const int size = 2;
+// Without pointers
 
-typedef struct
+void bubbleSort(int arr[], int size)
 {
-    int type;
-    union
+    for (int i = 0; i < size - 1; i++)
     {
-        int intData;
-        float floatData;
-        char charData[MAX_LENGTH_OF_CHAR];
-    } data;
-} StackItem;
-
-typedef struct
-{
-    StackItem *data;
-    int top;
-    unsigned int capacity;
-} Stack;
-
-void initializeStack(Stack *stack)
-{
-    if (size < 0)
-    {
-        printf("Size of stack cannot be less than 0 \n");
-        system("pause");
-        exit(1);
-    }
-    stack->data = calloc(size, sizeof(StackItem));
-    if (stack->data == NULL)
-    {
-        printf("System cannot allocate this amount of memory space from heap! \n");
-        system("pause");
-        exit(1);
-    }
-    stack->capacity = size;
-    stack->top = -1;
-}
-
-int isFull(Stack *stack)
-{
-    return stack->capacity - 1 == stack->top;
-}
-
-int isEmpty(Stack *stack)
-{
-    return stack->top == -1;
-}
-
-void pushToStack(Stack *stack, StackItem *value)
-{
-    int position = stack->top + 1;
-    stack->data[position] = *value;
-    stack->top++;
-}
-
-void popStack(Stack *stack)
-{
-    stack->top = stack->top - 1;
-}
-
-void peekStack(Stack *stack)
-{
-    StackItem item = stack->data[stack->top];
-    if (item.type == 1)
-        printf("%d\n", item.data.intData);
-    else if (item.type == 2)
-        printf("%f\n", item.data.floatData);
-    else if (item.type == 3)
-        printf("%s\n", item.data.charData);
-}
-
-void showStack(Stack *stack)
-{
-    printf("Stack Contents: ");
-    if (stack->top > -1)
-    {
-        for (int i = 0; i <= stack->top; i++)
+        for (int j = 0; j < size - i - 1; j++)
         {
-            StackItem item = stack->data[i];
-            if (item.type == 1)
-                printf("%d ", item.data.intData);
-            else if (item.type == 2)
-                printf("%f ", item.data.floatData);
-            else if (item.type == 3)
-                printf("%s ", item.data.charData);
+            if (arr[j] > arr[j + 1])
+            {
+                int tmp = arr[j];
+                arr[j] = arr[j + 1];
+                arr[j + 1] = tmp;
+            }
         }
     }
-    else
-        printf("(empty)");
-    printf("\n");
 }
 
-void operationsMenu()
+void selectionSort(int arr[], const int size)
 {
-    printf("Stack Operations Menu:\n");
-    printf("1. Push\n2. Pop\n3. Peek\n4. IsEmpty\n5. IsFull\n6. Exit\n");
-    printf("Enter your choice: ");
+    for (int i = 0; i < size - 1; i++)
+    {
+        int minIndex = i;
+        for (int j = i + 1; j < size; j++)
+            if (arr[minIndex] > arr[j])
+                minIndex = j;
+        if (minIndex != i)
+        {
+            int tmp = arr[i];
+            arr[i] = arr[minIndex];
+            arr[minIndex] = tmp;
+        }
+    }
 }
 
-void clearOutput()
+void insertionSort(int arr[], const int size)
 {
-    system("cls");
+    for (int i = 1; i < size; i++)
+    {
+        int sorted = i - 1;
+        while (sorted > -1 && arr[sorted] < arr[sorted + 1])
+        {
+            int tmp = arr[sorted];
+            arr[sorted] = arr[sorted + 1];
+            arr[sorted + 1] = tmp;
+            sorted--;
+        }
+    }
+}
+
+void merge(int arr[], int l, int m, int r)
+{
+    const int sizeOne = m - l + 1;
+    const int sizeTwo = r - m;
+    int L[sizeOne], R[sizeTwo];
+    int k = l, i = 0, j = 0;
+    for (i = 0; i < sizeOne; i++)
+        L[i] = arr[l + i];
+    for (i = 0; i < sizeTwo; i++)
+        R[i] = arr[m + 1 + i];
+
+    i = 0;
+    while (i < sizeOne && j < sizeTwo)
+    {
+        if (L[i] >= R[j])
+            arr[k++] = L[i++];
+        else
+            arr[k++] = R[j++];
+    }
+    while (i < sizeOne)
+    {
+        arr[k++] = L[i++];
+    }
+    while (j < sizeTwo)
+    {
+        arr[k++] = R[j++];
+    }
+}
+
+void mergeSort(int arr[], int l, int r)
+{
+    if (l < r)
+    {
+        int m = (l + r) / 2;
+        mergeSort(arr, l, m);
+        mergeSort(arr, m + 1, r);
+        merge(arr, l, m, r);
+    }
+}
+
+int oddDigits(int arr[], const int size)
+{
+    for (int i = 0; i < size; i++)
+    {
+        int digits = 0;
+        int copy = arr[i];
+        while (copy)
+        {
+            copy /= 10;
+            digits++;
+        }
+        if (digits % 2 == 0)
+            return 0;
+    }
+    return 1;
+}
+
+// With pointers
+
+void swap(int *a, int *b)
+{
+    int tmp = *a;
+    *a = *b;
+    *b = tmp;
+}
+
+void pointerBubbleSort(int *arr, const int size)
+{
+    for (int i = 0; i < size - 1; i++)
+        for (int j = 0; j < size - 1 - i; j++)
+            if (arr[j] > arr[j + 1])
+                swap(&arr[j], &arr[j + 1]);
+}
+
+void pointerSelectionSort(int *arr, const int size)
+{
+    for (int i = 0; i < size - 1; i++)
+    {
+        int minIndex = i;
+        for (int j = i + 1; j < size; j++)
+            if (arr[minIndex] > arr[j])
+                minIndex = j;
+
+        if (minIndex != i)
+            swap(&arr[i], &arr[minIndex]);
+    }
+}
+
+void pointerInsertionSort(int *arr, const int size)
+{
+    for (int i = 1; i < size; i++)
+    {
+        int sorted = i - 1;
+        while (sorted > -1 && arr[sorted] < arr[sorted + 1])
+        {
+            swap(&arr[sorted], &arr[sorted + 1]);
+            sorted--;
+        }
+    }
 }
 
 int main()
 {
-    Stack stack;
-    initializeStack(&stack);
-    int n = 1;
+    int arr[] = {2, 8, 0, 5, 10, 3, 7, 6, 4, 9, 1};
+    const int arrSize = sizeof(arr) / sizeof(arr[0]);
+    int sortedArr[arrSize];
+    printf("Version without pointers: \n");
+    printf("Original array:\t");
+    for (unsigned i = 0; i < arrSize; i++)
+        printf("%d ", arr[i]);
 
-    while (n)
+    if (oddDigits(arr, arrSize))
     {
-        int operation;
-        operationsMenu();
-        scanf("%d", &operation);
-        if (operation == 1)
-        {
-            clearOutput();
-            if (!isFull(&stack))
-            {
-                StackItem item;
-                printf("Type 1 for integer, 2 for float or 3 for char: ");
-                scanf("%d", &item.type);
-                if (item.type == 1)
-                {
-                    printf("Enter the value to push onto the stack: ");
-                    scanf("%d", &item.data.intData);
-                    clearOutput();
-                    printf("Element %d pushed onto the stack\n", item.data.intData);
-                }
-                else if (item.type == 2)
-                {
-                    printf("Enter the value to push onto the stack: ");
-                    scanf("%f", &item.data.floatData);
-                    clearOutput();
-                    printf("Element %f pushed onto the stack\n", item.data.floatData);
-                }
-                else if (item.type == 3)
-                {
-                    printf("Enter the value to push onto the stack: ");
-                    scanf("%s", item.data.charData);
-                    clearOutput();
-                    printf("Element %s pushed onto the stack\n", item.data.charData);
-                }
-                else
-                {
-                    clearOutput();
-                    printf("You entered an incorect number, try again \n");
-                    continue;
-                }
-                pushToStack(&stack, &item);
-                showStack(&stack);
-            }
-            else
-            {
-                printf("The Stack is full, you cannot enter more elements!\n");
-            }
-        }
-        else if (operation == 2)
-        {
-            clearOutput();
-            if (isEmpty(&stack))
-            {
-                printf("The stack is empty, you are not allowed to do this operation!\n");
-            }
-            else
-            {
-                printf("Popped element: ");
-                peekStack(&stack);
-                popStack(&stack);
-                showStack(&stack);
-            }
-        }
-        else if (operation == 3)
-        {
-            clearOutput();
-            if (isEmpty(&stack))
-            {
-                printf("The stack is empty, you are not allowed to do this operation!\n");
-            }
-            else
-            {
-                printf("Peeked element: ");
-                peekStack(&stack);
-            }
-        }
-        else if (operation == 4)
-        {
-            clearOutput();
-            if (isEmpty(&stack))
-                printf("The Stack is empty\n");
-            else
-                printf("The Stack is NOT empty\n");
-        }
-        else if (operation == 5)
-        {
-            clearOutput();
-            if (isFull(&stack))
-                printf("The Stack is full\n");
-            else
-                printf("The Stack is NOT full\n");
-        }
-        else if (operation == 6)
-        {
-            printf("Exiting the program");
-            n = 0;
-            free(stack.data);
-        }
-        else
-        {
-            printf("You entered the wrong number, try again\n");
-        }
+        printf("\nAll elements from the array have an odd number of digits!");
+    }
+    else
+    {
+        printf("\nNot all elements from the array have an odd number of digits!");
     }
 
-    getch();
+    memcpy(sortedArr, arr, sizeof(arr));
+    bubbleSort(sortedArr, arrSize);
+    printf("\nSorted array after Bubble Sort: ");
+    for (unsigned i = 0; i < arrSize; i++)
+        printf("%d ", sortedArr[i]);
+
+    memcpy(sortedArr, arr, sizeof(arr));
+    selectionSort(sortedArr, arrSize);
+    printf("\nSorted array after Selection Sort: ");
+    for (unsigned i = 0; i < arrSize; i++)
+        printf("%d ", sortedArr[i]);
+
+    memcpy(sortedArr, arr, sizeof(arr));
+    insertionSort(sortedArr, arrSize);
+    printf("\nSorted array after Insertion Sort: ");
+    for (unsigned i = 0; i < arrSize; i++)
+        printf("%d ", sortedArr[i]);
+
+    memcpy(sortedArr, arr, sizeof(arr));
+    mergeSort(sortedArr, 0, arrSize - 1);
+    printf("\nSorted array after Merge Sort: ");
+    for (unsigned i = 0; i < arrSize; i++)
+        printf("%d ", sortedArr[i]);
+
+    printf("\n\nVersion with pointers:");
+    memcpy(sortedArr, arr, sizeof(arr));
+    pointerBubbleSort(sortedArr, arrSize);
+    printf("\nSorted array after Bubble Sort: ");
+    for (unsigned i = 0; i < arrSize; i++)
+        printf("%d ", sortedArr[i]);
+
+    memcpy(sortedArr, arr, sizeof(arr));
+    pointerSelectionSort(sortedArr, arrSize);
+    printf("\nSorted array after Selection Sort: ");
+    for (unsigned i = 0; i < arrSize; i++)
+        printf("%d ", sortedArr[i]);
+
+    memcpy(sortedArr, arr, sizeof(arr));
+    pointerInsertionSort(sortedArr, arrSize);
+    printf("\nSorted array after Insetion Sort: ");
+    for (unsigned i = 0; i < arrSize; i++)
+        printf("%d ", sortedArr[i]);
+
+    printf("\n");
+    system("pause");
     return 0;
 }

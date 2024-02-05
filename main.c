@@ -5,6 +5,7 @@
 
 // Without pointers
 
+// Function to perform Bubble Sort on an array
 void bubbleSort(int arr[], int size)
 {
     for (int i = 0; i < size - 1; i++)
@@ -13,6 +14,8 @@ void bubbleSort(int arr[], int size)
         {
             if (arr[j] < arr[j + 1])
             {
+                // We swap here the elements
+                // In order to get the smallest element at the end
                 int tmp = arr[j];
                 arr[j] = arr[j + 1];
                 arr[j + 1] = tmp;
@@ -21,6 +24,7 @@ void bubbleSort(int arr[], int size)
     }
 }
 
+// Function to perform Selection Sort on an array
 void selectionSort(int arr[], int size)
 {
     for (int i = 0; i < size - 1; i++)
@@ -31,6 +35,8 @@ void selectionSort(int arr[], int size)
                 minIndex = j;
         if (minIndex != i)
         {
+            // If the smallest element is not at his place
+            // then we place it there
             int tmp = arr[i];
             arr[i] = arr[minIndex];
             arr[minIndex] = tmp;
@@ -38,6 +44,7 @@ void selectionSort(int arr[], int size)
     }
 }
 
+// Function to perform Insertion Sort on an array
 void insertionSort(int arr[], int size)
 {
     for (int i = 1; i < size; i++)
@@ -45,6 +52,7 @@ void insertionSort(int arr[], int size)
         int sorted = i - 1;
         while (sorted > -1 && arr[sorted] > arr[sorted + 1])
         {
+            // We sort all elements till the position i - 1
             int tmp = arr[sorted];
             arr[sorted] = arr[sorted + 1];
             arr[sorted + 1] = tmp;
@@ -53,6 +61,7 @@ void insertionSort(int arr[], int size)
     }
 }
 
+// Function to merge two subarrays in Merge Sort
 void merge(int arr[], int l, int m, int r)
 {
     int sizeOne = m - l + 1;
@@ -82,6 +91,7 @@ void merge(int arr[], int l, int m, int r)
     }
 }
 
+// Function to perform Merge Sort on an array
 void mergeSort(int arr[], int l, int r)
 {
     if (l < r)
@@ -93,6 +103,7 @@ void mergeSort(int arr[], int l, int r)
     }
 }
 
+// Function to check if all elements have an odd number of digits
 int oddDigits(int arr[], int size)
 {
     for (int i = 0; i < size; i++)
@@ -112,6 +123,7 @@ int oddDigits(int arr[], int size)
 
 // With pointers
 
+// Function to swap two integers using pointers
 void swap(int *a, int *b)
 {
     int tmp = *a;
@@ -119,6 +131,7 @@ void swap(int *a, int *b)
     *b = tmp;
 }
 
+// Function to perform Bubble Sort on an array using pointers
 void pointerBubbleSort(int *arr, int *size)
 {
     for (int i = 0; i < *size - 1; i++)
@@ -127,6 +140,7 @@ void pointerBubbleSort(int *arr, int *size)
                 swap(&arr[j], &arr[j + 1]);
 }
 
+// Function to perform Selection Sort on an array using pointers
 void pointerSelectionSort(int *arr, int *size)
 {
     for (int i = 0; i < *size - 1; i++)
@@ -141,6 +155,7 @@ void pointerSelectionSort(int *arr, int *size)
     }
 }
 
+// Function to check if all elements have an odd number of digits using pointers
 int pointerOddDigits(int *arr, int *size)
 {
     for (int i = 0; i < *size; i++)
@@ -158,6 +173,7 @@ int pointerOddDigits(int *arr, int *size)
     return 1;
 }
 
+// Function to check for prime numbers in the array using pointers
 int pointerPrimeNumbers(int *arr, int *size)
 {
     int isPrime, hasPrime = 0;
@@ -184,18 +200,22 @@ int pointerPrimeNumbers(int *arr, int *size)
 int main()
 {
     int arr[100], arrSize;
-    printf("Enter the number which will be in array: ");
+
+    // Taking input for array size and elements
+    printf("Enter the number which will be in the array: ");
     scanf("%d", &arrSize);
-    printf("Enter elements which will be stored in array: \n");
+    printf("Enter elements which will be stored in the array: \n");
     for (int i = 0; i < arrSize; i++)
         scanf("%d", &arr[i]);
 
+    // Version without pointers
     printf("Version without pointers: \n");
     printf("Original array:\t");
     for (unsigned i = 0; i < arrSize; i++)
         printf("%d ", arr[i]);
 
     int sortedArr[100];
+
     if (oddDigits(arr, arrSize))
     {
         printf("\nAll elements from the array have an odd number of digits!");
@@ -215,7 +235,9 @@ int main()
             printf("%d ", sortedArr[i]);
     }
 
+    // Version with pointers
     printf("\n\nVersion with pointers:");
+
     if (pointerOddDigits(arr, &arrSize))
     {
         printf("\nAll elements from the array have an odd number of digits!");

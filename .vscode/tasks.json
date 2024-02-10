@@ -19,31 +19,6 @@
                 "kind": "build",
                 "isDefault": true
             }
-        },
-        {
-            "label": "C/C++: gcc.exe run built file",
-            "type": "shell",
-            "command": "start",
-            "args": [
-                "./main.exe"
-            ],
-            "dependsOn": "C/C++: gcc.exe build file",
-            "group": {
-                "kind": "build",
-                "isDefault": true
-            }
-        },
-        {
-            "label": "C/C++: gcc.exe run .exe file",
-            "type": "shell",
-            "command": "start",
-            "args": [
-                "./main.exe"
-            ],
-            "group": {
-                "kind": "build",
-                "isDefault": true
-            }
         }
     ]
 }
